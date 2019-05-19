@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import MinMaxScaler
+
+#数据的两种打开方式
+#with open('C:/Users/mi/Documents/python/data analysis/kmeans-master/data.csv','r') as f:
+    #data = pd.read_csv(f)
+data = pd.read_csv('C:/Users/mi/Documents/python/data analysis/kmeans-master/data.csv',encoding = 'gbk')
+#print(data)
+train_x = data[['2019年国际排名','2018世界杯','2015亚洲杯']]
+df = pd.DataFrame(train_x)
+k_means = KMeans(n_clusters = 3)
+min_max_scaler = MinMaxScaler()
+train_x = min_max_scaler.fit_transform(train_x)
+k_means.fit(train_x) #对数据进行聚类
+predict_y = k_means.predict(train_x)  #针对数据中的每个样本，计算最近的类
+#合并聚类结果，将聚类结果插入原数据最后一列
+result = pd.concat((data,pd.DataFrame(predict_y)),axis=1)
+result.rename({0:u'聚类'},axis = 1,inplace = True)
+print(result)
